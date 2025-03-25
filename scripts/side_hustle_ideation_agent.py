@@ -25,31 +25,31 @@ import importlib.util
 
 # Constants
 OLLAMA_API_URL = "http://localhost:11434/api"
-USER_PROFILE_PATH = "model/user-profile.json"
-SUGGESTIONS_DIR = "suggestions"
-TEMPLATE_PATH = "agent-basis/response-template.md"
+USER_PROFILE_PATH = "user-data/user-profile.json"
+SUGGESTIONS_DIR = "example-suggestions"
+TEMPLATE_PATH = "agent-configuration/side-hustles/response-template.md"
 
 # Category constants
 CATEGORIES = {
     "side_hustle": {
         "name": "Side Hustle Ideas",
         "folder": "side_hustles",
-        "template": "agent-basis/response-template.md"
+        "template": "agent-configuration/side-hustles/response-template.md"
     },
     "career_pivot": {
         "name": "Career Pivot Suggestions",
         "folder": "career_pivots",
-        "template": "agent-basis/response-template.md"  # We'll use the same template for now
+        "template": "agent-configuration/career-pivots/response-template.md"
     },
     "potential_employer": {
         "name": "Potential Employers",
         "folder": "potential_employers",
-        "template": "agent-basis/response-template.md"  # We'll use the same template for now
+        "template": "agent-configuration/potential-employers/response-template.md"
     },
     "job_title": {
         "name": "Job Title Suggestions",
         "folder": "job_titles",
-        "template": "agent-basis/response-template.md"  # We'll use the same template for now
+        "template": "agent-configuration/job-titles/response-template.md"
     }
 }
 
@@ -128,27 +128,47 @@ def load_template(category_key="side_hustle"):
 
 def get_user_parameters():
     """Get parameters from user: category, number of suggestions and creativity level."""
-    # First, let the user select a category
+    # First, let the user select a category or balanced mode
     print("\nWhat type of career exploration suggestions would you like to generate?")
     for i, (key, category) in enumerate(CATEGORIES.items(), 1):
         print(f"{i}: {category['name']}")
+    print(f"{len(CATEGORIES) + 1}: Balanced Mix (equal distribution of all types)")
     
     while True:
         try:
-            category_choice = int(input("\nEnter your choice (1-4): "))
+            category_choice = int(input("\nEnter your choice (1-5): "))
             if 1 <= category_choice <= len(CATEGORIES):
                 category_key = list(CATEGORIES.keys())[category_choice - 1]
+                balanced_mode = False
                 break
-            print(f"Please enter a number between 1 and {len(CATEGORIES)}.")
+            elif category_choice == len(CATEGORIES) + 1:
+                category_key = None  # Will be determined during generation
+                balanced_mode = True
+                break
+            print(f"Please enter a number between 1 and {len(CATEGORIES) + 1}.")
         except ValueError:
             print("Please enter a valid number.")
     
+    # Predefined suggestion count options
+    suggestion_options = [50, 100, 200, 500]
+    print("\nHow many suggestions would you like to generate?")
+    for i, count in enumerate(suggestion_options, 1):
+        print(f"{i}: {count} suggestions")
+    print(f"{len(suggestion_options) + 1}: Custom number")
+    
     while True:
         try:
-            num_suggestions = int(input(f"\nHow many {CATEGORIES[category_key]['name']} would you like to generate? "))
-            if num_suggestions > 0:
+            count_choice = int(input("\nEnter your choice: "))
+            if 1 <= count_choice <= len(suggestion_options):
+                num_suggestions = suggestion_options[count_choice - 1]
                 break
-            print("Please enter a positive number.")
+            elif count_choice == len(suggestion_options) + 1:
+                num_suggestions = int(input("Enter custom number of suggestions: "))
+                if num_suggestions <= 0:
+                    print("Please enter a positive number.")
+                    continue
+                break
+            print(f"Please enter a number between 1 and {len(suggestion_options) + 1}.")
         except ValueError:
             print("Please enter a valid number.")
     
@@ -173,7 +193,7 @@ def get_user_parameters():
         5: 1.1
     }
     
-    return category_key, num_suggestions, creativity, temperature_map[creativity]
+    return category_key, num_suggestions, creativity, temperature_map[creativity], balanced_mode
 
 def generate_suggestion(model, user_profile, temperature, template, category_key):
     """Generate a suggestion using the Ollama API based on the selected category."""
@@ -183,12 +203,13 @@ def generate_suggestion(model, user_profile, temperature, template, category_key
 Your objective is to help users build viable income streams to supplement their income and encourage them to think broadly about their career positioning.
 
 IMPORTANT GUIDELINES:
-1. Take your time to think deeply about each suggestion. Quality is more important than speed.
-2. Provide detailed reasoning for why each suggestion is appropriate for the user's specific skills and circumstances.
-3. Consider market dynamics, trends, and realistic income potential in the user's geographic location.
-4. Be thorough in your analysis - explore both opportunities and challenges.
-5. Generate a descriptive, concise name for each side hustle (max 3 words) that clearly summarizes the core idea.
+1. Focus on DIVERSITY and ORIGINALITY in your suggestions - avoid common, overused ideas.
+2. Do not overemphasize any single aspect of the user's profile - consider their full range of skills, interests, and experiences.
+3. Provide detailed reasoning that connects the suggestion to multiple aspects of the user's background.
+4. Consider market dynamics, trends, and realistic income potential in the user's geographic location.
+5. Generate a descriptive, concise name (max 3 words) that clearly summarizes the core idea.
 6. Follow the template structure exactly, filling in all sections with thoughtful content.
+7. Each suggestion must be COMPLETELY DIFFERENT from any previous suggestions.
 
 Remember that these suggestions may be used for automated processing, so consistency in format is essential.
 """,
@@ -196,12 +217,13 @@ Remember that these suggestions may be used for automated processing, so consist
 Your objective is to help users identify new career directions that leverage their existing skills while exploring new opportunities.
 
 IMPORTANT GUIDELINES:
-1. Take your time to think deeply about each suggestion. Quality is more important than speed.
-2. Provide detailed reasoning for why each pivot is appropriate for the user's specific skills and circumstances.
-3. Consider market dynamics, trends, and realistic career potential in the user's geographic location.
-4. Be thorough in your analysis - explore both opportunities and challenges of the pivot.
-5. Generate a descriptive, concise name for each career pivot (max 3 words) that clearly summarizes the core direction.
+1. Focus on DIVERSITY and ORIGINALITY in your suggestions - avoid common, overused career paths.
+2. Do not overemphasize any single aspect of the user's profile - consider their full range of skills, interests, and experiences.
+3. Provide detailed reasoning that connects the pivot to multiple aspects of the user's background.
+4. Consider market dynamics, trends, and realistic career potential in the user's geographic location.
+5. Generate a descriptive, concise name (max 3 words) that clearly summarizes the core direction.
 6. Follow the template structure exactly, filling in all sections with thoughtful content.
+7. Each suggestion must be COMPLETELY DIFFERENT from any previous suggestions.
 
 Remember that these suggestions may be used for automated processing, so consistency in format is essential.
 """,
@@ -209,12 +231,13 @@ Remember that these suggestions may be used for automated processing, so consist
 Your objective is to help users discover organizations where they could thrive based on their skills, experience, and preferences.
 
 IMPORTANT GUIDELINES:
-1. Take your time to think deeply about each suggestion. Quality is more important than speed.
-2. Provide detailed reasoning for why each employer is appropriate for the user's specific skills and circumstances.
-3. Consider company culture, growth potential, and alignment with the user's values and location preferences.
-4. Be thorough in your analysis - explore both opportunities and challenges of working with this employer.
-5. Generate a descriptive, concise name for each employer suggestion (max 3 words) that clearly summarizes the type of organization.
+1. Focus on DIVERSITY and ORIGINALITY in your suggestions - include a mix of established companies, startups, non-profits, and other organization types.
+2. Do not overemphasize any single aspect of the user's profile - consider their full range of skills, interests, and experiences.
+3. Provide detailed reasoning that connects the employer to multiple aspects of the user's background.
+4. Consider company culture, growth potential, and alignment with the user's values and location preferences.
+5. Generate a descriptive, concise name (max 3 words) that clearly summarizes the type of organization.
 6. Follow the template structure exactly, filling in all sections with thoughtful content.
+7. Each suggestion must be COMPLETELY DIFFERENT from any previous suggestions.
 
 Remember that these suggestions may be used for automated processing, so consistency in format is essential.
 """,
@@ -222,12 +245,13 @@ Remember that these suggestions may be used for automated processing, so consist
 Your objective is to help users discover positions where they could thrive based on their skills, experience, and preferences.
 
 IMPORTANT GUIDELINES:
-1. Take your time to think deeply about each suggestion. Quality is more important than speed.
-2. Provide detailed reasoning for why each job title is appropriate for the user's specific skills and circumstances.
-3. Consider role responsibilities, growth potential, and alignment with the user's skills and interests.
-4. Be thorough in your analysis - explore both opportunities and challenges of this job title.
+1. Focus on DIVERSITY and ORIGINALITY in your suggestions - include a mix of traditional, emerging, and niche job titles.
+2. Do not overemphasize any single aspect of the user's profile - consider their full range of skills, interests, and experiences.
+3. Provide detailed reasoning that connects the job title to multiple aspects of the user's background.
+4. Consider role responsibilities, growth potential, and alignment with the user's skills and interests.
 5. Generate a descriptive, concise job title (max 3 words) that clearly summarizes the role.
 6. Follow the template structure exactly, filling in all sections with thoughtful content.
+7. Each suggestion must be COMPLETELY DIFFERENT from any previous suggestions.
 
 Remember that these suggestions may be used for automated processing, so consistency in format is essential.
 """
@@ -238,6 +262,7 @@ Remember that these suggestions may be used for automated processing, so consist
         "side_hustle": f"""Based on the following user profile, generate ONE creative side hustle idea.
 The idea should be tailored to the user's skills, experience, and interests.
 Follow the template structure exactly, filling in all sections with thoughtful content.
+Make sure this suggestion is COMPLETELY DIFFERENT from any previous suggestions.
 
 USER PROFILE:
 {json.dumps(user_profile, indent=2)}
@@ -249,8 +274,9 @@ Generate a complete side hustle suggestion following the template structure abov
 Ensure the side hustle name is descriptive and concise (maximum 3 words).
 """,
         "career_pivot": f"""Based on the following user profile, generate ONE creative career pivot suggestion.
-The pivot should be tailored to the user's skills, experience, and interests.
+The suggestion should be tailored to the user's skills, experience, and interests.
 Follow the template structure exactly, filling in all sections with thoughtful content.
+Make sure this suggestion is COMPLETELY DIFFERENT from any previous suggestions.
 
 USER PROFILE:
 {json.dumps(user_profile, indent=2)}
@@ -261,9 +287,10 @@ TEMPLATE TO FOLLOW:
 Generate a complete career pivot suggestion following the template structure above.
 Ensure the career pivot name is descriptive and concise (maximum 3 words).
 """,
-        "potential_employer": f"""Based on the following user profile, suggest ONE potential employer that would be a good fit.
-The employer should align with the user's skills, experience, and interests.
+        "potential_employer": f"""Based on the following user profile, identify ONE potential employer that would be a good fit.
+The suggestion should be tailored to the user's skills, experience, and interests.
 Follow the template structure exactly, filling in all sections with thoughtful content.
+Make sure this suggestion is COMPLETELY DIFFERENT from any previous suggestions.
 
 USER PROFILE:
 {json.dumps(user_profile, indent=2)}
@@ -272,11 +299,12 @@ TEMPLATE TO FOLLOW:
 {template}
 
 Generate a complete potential employer suggestion following the template structure above.
-Ensure the employer type name is descriptive and concise (maximum 3 words).
+Ensure the employer name is descriptive and concise (maximum 3 words).
 """,
-        "job_title": f"""Based on the following user profile, suggest ONE job title that would be a good fit.
-The job title should align with the user's skills, experience, and interests.
+        "job_title": f"""Based on the following user profile, suggest ONE potential job title that would be a good fit.
+The suggestion should be tailored to the user's skills, experience, and interests.
 Follow the template structure exactly, filling in all sections with thoughtful content.
+Make sure this suggestion is COMPLETELY DIFFERENT from any previous suggestions.
 
 USER PROFILE:
 {json.dumps(user_profile, indent=2)}
@@ -402,26 +430,65 @@ def main():
     print(f"✅ Loaded user profile for {user_profile['user']['name']}")
     
     # Get user parameters
-    category_key, num_suggestions, creativity, temperature = get_user_parameters()
-    print(f"\nGenerating {num_suggestions} {CATEGORIES[category_key]['name']} with creativity level {creativity} (temperature: {temperature:.1f})")
+    category_key, num_suggestions, creativity, temperature, balanced_mode = get_user_parameters()
     
-    # Load template for the selected category
-    template = load_template(category_key)
-    
-    # Generate and save suggestions
-    successful = 0
-    for i in range(num_suggestions):
-        print(f"\n🧠 Generating suggestion {i+1}/{num_suggestions}...")
+    if balanced_mode:
+        # Calculate how many suggestions to generate for each category
+        categories_count = len(CATEGORIES)
+        suggestions_per_category = num_suggestions // categories_count
+        remainder = num_suggestions % categories_count
         
-        suggestion = generate_suggestion(model, user_profile, temperature, template, category_key)
-        if suggestion:
-            if save_suggestion(suggestion, i, category_key):
-                successful += 1
-            time.sleep(1)  # Small delay between generations
-    
-    # Summary
-    print(f"\n✅ Successfully generated {successful}/{num_suggestions} {CATEGORIES[category_key]['name']}.")
-    print(f"📁 Suggestions saved to {os.path.join(SUGGESTIONS_DIR, CATEGORIES[category_key]['folder'])}/")
+        # Distribute remainder evenly
+        category_counts = {key: suggestions_per_category for key in CATEGORIES.keys()}
+        for i, key in enumerate(CATEGORIES.keys()):
+            if i < remainder:
+                category_counts[key] += 1
+        
+        print(f"\nGenerating a balanced mix of {num_suggestions} suggestions with creativity level {creativity} (temperature: {temperature:.1f})")
+        print("Distribution:")
+        for key, count in category_counts.items():
+            print(f"- {CATEGORIES[key]['name']}: {count} suggestions")
+        
+        # Generate and save suggestions for each category
+        successful = 0
+        for category_key, count in category_counts.items():
+            print(f"\n📂 Generating {count} {CATEGORIES[category_key]['name']}...")
+            
+            # Load template for this category
+            template = load_template(category_key)
+            
+            for i in range(count):
+                print(f"\n🧠 Generating {CATEGORIES[category_key]['name']} suggestion {i+1}/{count}...")
+                
+                suggestion = generate_suggestion(model, user_profile, temperature, template, category_key)
+                if suggestion:
+                    if save_suggestion(suggestion, i, category_key):
+                        successful += 1
+                    time.sleep(1)  # Small delay between generations
+        
+        # Summary
+        print(f"\n✅ Successfully generated {successful}/{num_suggestions} suggestions across all categories.")
+        print(f"📁 Suggestions saved to {SUGGESTIONS_DIR}/ in their respective category folders")
+    else:
+        print(f"\nGenerating {num_suggestions} {CATEGORIES[category_key]['name']} with creativity level {creativity} (temperature: {temperature:.1f})")
+        
+        # Load template for the selected category
+        template = load_template(category_key)
+        
+        # Generate and save suggestions
+        successful = 0
+        for i in range(num_suggestions):
+            print(f"\n🧠 Generating suggestion {i+1}/{num_suggestions}...")
+            
+            suggestion = generate_suggestion(model, user_profile, temperature, template, category_key)
+            if suggestion:
+                if save_suggestion(suggestion, i, category_key):
+                    successful += 1
+                time.sleep(1)  # Small delay between generations
+        
+        # Summary
+        print(f"\n✅ Successfully generated {successful}/{num_suggestions} {CATEGORIES[category_key]['name']}.")
+        print(f"📁 Suggestions saved to {os.path.join(SUGGESTIONS_DIR, CATEGORIES[category_key]['folder'])}/")
 
 if __name__ == "__main__":
     main()

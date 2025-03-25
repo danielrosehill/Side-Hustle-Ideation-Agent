@@ -17,7 +17,7 @@ import markdown
 import argparse
 
 # Constants
-SUGGESTIONS_DIR = "suggestions"
+SUGGESTIONS_DIR = "example-suggestions"
 INDEX_FILE = os.path.join(SUGGESTIONS_DIR, "index.html")
 ASSETS_DIR = os.path.join(SUGGESTIONS_DIR, "assets")
 
