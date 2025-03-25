@@ -1,0 +1,2 @@
+requests>=2.25.0
+markdown>=3.3.0

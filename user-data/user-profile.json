@@ -1,0 +1,128 @@
+{
+    "user": {
+      "name": "Daniel Rosehill",
+      "location": "Jerusalem, Israel",
+      "age": 36,
+      "occupation": "Technical Communications",
+      "professional_experience": [
+        {
+          "title": "Communications Manager",
+          "organization": "Sir Ronald Cohen",
+          "dates": "2022 - Feb 2025",
+          "description": [
+            "Led strategic communications for a pioneer in impact investing.",
+            "Key Achievement: Developed a dataset for the IFVI project that achieved almost 2,000 downloads, demonstrating impact in the field of impact accounting and open-source contribution.",
+            "Focused on social media management, video production, brief writing, and data-led storytelling."
+          ]
+        },
+        {
+          "title": "Independent Consultant (DSR Holdings)",
+          "organization": "DSR Holdings",
+          "dates": "2015-Present",
+          "description": [
+            "Provided technical communication, documentation, prompt engineering, and consulting services to technology companies, ranging from startups to Fortune 500s.",
+            "Focus on applying AI technologies, including LangChain, LangGraph, Gemini, OpenAI APIs, and Zapier."
+          ]
+        },
+        {
+          "title": "Marketing Communications Manager",
+          "organization": "Ayyeka, Jerusalem",
+          "dates": "2017-2018",
+          "description": [
+            "Managed communications for an IIoT (Industrial Internet of Things) company.",
+            "Focused on ghostwriting and PR activities for smart city technology."
+          ]
+        },
+        {
+          "title": "Assistant Account Executive",
+          "organization": "Finn Partners, Jerusalem",
+          "dates": "2015-2016",
+          "description": [
+            "Worked on high-tech accounts, including CRM and medical devices.",
+            "Responsibilities included media pitching and writing projects."
+          ]
+        },
+        {
+          "title": "Marketing Communications Manager",
+          "organization": "Ecanvasser (Now Vconnecta), Cork",
+          "dates": "2013-2014",
+          "description": [
+            "Led full-stack marketing for an Irish political tech startup.",
+            "Supported the company's entry into the US market."
+          ]
+        }
+      ],
+      "key_skills": [
+        "Technical Communications: Creating documentation, user guides, and technical content, with a specific focus on AI-related projects and technologies.",
+        "Marketing Communications: Developing and implementing communication strategies (but seeking to apply this in an AI context).",
+        "Documentation:  Strong emphasis on creating, organizing, and maintaining documentation for complex systems, *especially* AI project development.",
+        "Prompt Engineering:  Practical experience implementing and utilizing AI tools through effective prompt design.",
+        "Content Strategy: Developing and executing content strategies (but not seeking purely \"Content Writer\" roles).",
+        "Stakeholder Management: Building and maintaining relationships with internal and external stakeholders.",
+        "AI-Specific Technologies: LangChain, LangGraph, Gemini, OpenAI APIs, Zapier, orchestration and agentic frameworks.",
+        "Technical Proficiency: Linux system administration, DevOps principles, Docker.  Comfortable with technology; strength in *application* and user-centric aspects.",
+        "Video and Photo Editing (Basic)"
+      ],
+      "projects": [
+        {
+          "name": "ImpactDB",
+          "dates": "2024-Present",
+          "description": "Creator of ImpactDatabase.org, an open data publishing site supporting nonprofit organizations with data collection, preparation, publication, and visualization."
+        }
+      ],
+      "education": [
+        {
+          "degree": "MA, Political Journalism",
+          "institution": "City University London, UK"
+        },
+        {
+          "degree": "BCL, Law",
+          "institution": "University College Cork, Ireland"
+        }
+      ],
+      "publications": [
+        "Marketing Profs",
+        "Entrepreneur",
+        "Linux Magazine"
+      ],
+      "awards": [
+        "50 Best B2B SaaS Freelance Writers – Software World Research",
+        "Top 10 Cybersecurity Ghostwriters – Cybercrime Magazine"
+      ],
+      "contact_and_online_presence": {
+        "website": "https://danielrosehill.com",
+        "resume": "https://danielrosehill.com/resume/",
+        "linkedin": "https://www.linkedin.com/in/danielrosehill/",
+        "github": "https://github.com/danielrosehill",
+        "hugging_face": "https://huggingface.co/danielrosehill",
+        "youtube": "https://www.youtube.com/c/DanielRosehillVideo",
+        "business_page": "https://dsrholdings.cloud",
+        "citizenships": [
+          "Ireland",
+          "Israel"
+        ]
+      },
+      "ai_interests_and_preferences": {
+        "output_management": "Strong belief in the value of managing and utilizing AI outputs for their contextual information.",
+        "personalized_rag": "Advocate for small, curated, user-owned datasets for personalizing AI experiences.",
+        "ai_memory_workflow_and_tooling": "Interest in AI memory solutions (e.g., Letta, MemGPT) and the broader AI ecosystem, including agentic workflows and orchestration (MCP).  Notes a lack of usability focus in many existing tools.",
+        "ai_for_good": "Passionate about using AI to address practical needs and improve lives.",
+        "idea_generation": "Values AI's capabilities for brainstorming and generating ideas.",
+        "preferred_work_environment": {
+          "location": "Based in Jerusalem. Hybrid/in-office for Israeli opportunities; remote for international opportunities.",
+          "engagement": "Open to full-time employment, contract work with stable clients, or establishing a consultancy.  Prioritizes work alignment."
+        },
+        "company_culture": [
+          "Focus on contribution.",
+          "Creative thinking.",
+          "Long term vision.",
+          "No hype."
+        ],
+        "strengths": [
+          "Creative, enthusiastic learner.",
+          "Passionate about tech for good.",
+          "Committed to Israel."
+        ]
+      }
+    }
+  }
